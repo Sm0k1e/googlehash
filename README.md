@@ -6,7 +6,7 @@ Repository for the 2018 edition of the Google Hash
 Clone repo ;)
 
 ### Prerequisites
-Be a member of  **touch \this**
+Be a member of  **touch /this**
 
 ### Installing
 Run **Main**
