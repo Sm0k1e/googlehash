@@ -9,7 +9,7 @@ public class Main {
     /**
      * Comment by aron
      */
-    private static final String fileName = "example";
+    private static final String fileName = "a_example";
 
     public static void main(String... args){
         // Read file
@@ -19,9 +19,9 @@ public class Main {
         ////////////////////  CODE  //////////////////////////////
         //////////////////////////////////////////////////////////
 
+
+
         //////////////////////////////////////////////////////////
-        // Write result
-        System.out.print("asdf");
         new FileWriter(fileName,rows.toString());
     }
 }
