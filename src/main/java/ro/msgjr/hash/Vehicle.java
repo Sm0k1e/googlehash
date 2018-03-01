@@ -23,7 +23,7 @@ public class Vehicle {
         this.id = id;
         this.currentRide = currentRide;
         this.ttLive = ttLive;
-        this.rideIds = new ArrayList<>();
+        this.rideIds = sortRides(0L,new Point(0L,0L), Main.rides);
         this.rideHistory = new ArrayList<>();
     }
 
@@ -53,10 +53,19 @@ public class Vehicle {
     }
 
     private Long scheduleNewRide(){
-        Ride currentRide = Main.rides.stream().filter(e -> e.getId().equals(this.currentRide)).findFirst().get();
+        if(this.currentRide == null){
+            this.currentRide = this.rideIds.get(0);
+            Ride newRide = Main.allRides.stream().filter(e -> e.getId().equals(this.currentRide)).findFirst().get();
+            this.rideHistory.add(this.currentRide);
+            this.ttLive = costToStart(newRide,new Point(0L,0L),Main.globalTime);
+            return this.currentRide;
+        }
+        Ride justFinished = Main.allRides.stream().filter(e -> e.getId().equals(this.currentRide)).findFirst().get();
         this.currentRide = this.rideIds.get(0);
+        Ride newRide = Main.allRides.stream().filter(e -> e.getId().equals(this.currentRide)).findFirst().get();
         this.rideHistory.add(this.currentRide);
-        this.ttLive = costToStart(currentRide,currentRide.getEndPoint(),Main.globalTime);
+        this.ttLive = costToStart(newRide,justFinished.getEndPoint(),Main.globalTime);
+        this.rideIds = sortRides(Main.globalTime + costToStart(newRide, justFinished.getEndPoint(), Main.globalTime), newRide.getEndPoint(), Main.rides);
         return this.currentRide;
     }
 

@@ -3,7 +3,11 @@ package ro.msgjr.hash;
 import ro.msgjr.hash.inout.FileReader;
 import ro.msgjr.hash.inout.FileWriter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Main {
 
@@ -11,6 +15,7 @@ public class Main {
 
     static Long bonus;
     static List<Ride> rides;
+    static List<Ride> allRides;
     static Long globalTime = 0L;
 
 
@@ -27,48 +32,45 @@ public class Main {
         bonus = simulation.getBonus();
 //        globalTime = simulation.getSimulationSteps();
         rides = getRides(iterator);
+        allRides = new ArrayList<>(rides);
 
         List<Vehicle> vehicles = new ArrayList<>();
-        for (Long i = 0L ; i < simulation.getVehicles(); i++) {
-            vehicles.add(new Vehicle(i, null, 0L ));
+        for (Long i = 0L; i < simulation.getVehicles(); i++) {
+            vehicles.add(new Vehicle(i, null, 0L));
         }
 
         for (int i = 0; i < simulation.getSimulationSteps(); i++) {
 
-            for (Vehicle v: vehicles) {
-                Long rideId = 0L; // = v.update();
-                if(rideId != null){
-                    v.getRideIds().remove(rideId);
+            for (Vehicle v : vehicles) {
+                Long rideId = v.update();
+                if (rideId != null) {
+                    v.getRideIds().remove(v.getRideIds().stream().filter(e->e.equals(rideId)).findFirst().get());
                     vehicles.stream().filter(e -> !e.getId().equals(v.getId())).forEach(f -> f.getRideIds().remove(rideId));
-                    rides.remove(rides.stream().filter(e-> e.getId().equals(rideId)).findFirst().get());
+                    rides.remove(rides.stream().filter(e -> e.getId().equals(rideId)).findFirst().get());
                 }
-                /**
-                 * vehicle.update() == null ? null : rideId;
-                 * rideId != null
-                 *  vehicle-> next ride = rideId
-                 *  for vehicles
-                 *      removeRideIds from vehicle
-                 *      removeRide
-                 *
-                 *
-                 */
 
-                if(rides.isEmpty()) {
-                    break;
-                }
-                if(rides.isEmpty()){
+                if (rides.isEmpty()) {
                     break;
                 }
             }
+            if (rides.isEmpty()) {
+                break;
+            }
         }
 
+        AtomicReference<String> output = new AtomicReference<>("");
+        vehicles.forEach(v -> {
+            output.updateAndGet(v1 -> v1 + v.getRideHistory().size());
+            v.getRideHistory().forEach(rh -> output.updateAndGet(vl -> vl + " " + rh));
+            output.updateAndGet(vl -> vl + "\n");
+        });
         //////////////////////////////////////////////////////////
         // Write result
-        new FileWriter(fileName, fileRows.toString());
+        new FileWriter(fileName, output.get());
     }
 
-    static Long distance(Point start, Point end){
-        return Math.abs(start.getX()-end.getX())+Math.abs(start.getY()-end.getY());
+    static Long distance(Point start, Point end) {
+        return Math.abs(start.getX() - end.getX()) + Math.abs(start.getY() - end.getY());
     }
 
     private static List<Ride> getRides(Iterator<String> iterator) {
