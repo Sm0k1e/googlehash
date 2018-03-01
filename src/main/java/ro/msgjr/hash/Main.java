@@ -21,7 +21,6 @@ public class Main {
 
         //////////////////////////////////////////////////////////
         // Write result
-        System.out.print("asdf");
         new FileWriter(fileName,rows.toString());
     }
 }
