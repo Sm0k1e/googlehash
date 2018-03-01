@@ -27,6 +27,40 @@ public class Main {
 
         rides = getRides(iterator);
 
+        List<Vehicle> vehicles = new ArrayList<>();
+        for (Long i = 0L ; i < simulation.getVehicles(); i++) {
+            vehicles.add(new Vehicle(i, null, 0L ));
+        }
+
+        for (int i = 0; i < simulation.getSimulationSteps(); i++) {
+
+            for (Vehicle v: vehicles) {
+                Long rideId = 0L; // = v.update();
+                if(rideId != null){
+                    v.getRideIds().remove(rideId);
+                    vehicles.stream().filter(e -> !e.getId().equals(v.getId())).forEach(f -> f.getRideIds().remove(rideId));
+                    rides.remove(rides.stream().filter(e-> e.getId().equals(rideId)).findFirst().get());
+                }
+                /**
+                 * vehicle.update() == null ? null : rideId;
+                 * rideId != null
+                 *  vehicle-> next ride = rideId
+                 *  for vehicles
+                 *      removeRideIds from vehicle
+                 *      removeRide
+                 *
+                 *
+                 */
+
+                if(rides.isEmpty()) {
+                    break;
+                }
+                if(rides.isEmpty()){
+                    break;
+                }
+            }
+        }
+
         //////////////////////////////////////////////////////////
         // Write result
         new FileWriter(fileName, fileRows.toString());
