@@ -6,6 +6,9 @@ import ro.msgjr.hash.inout.FileWriter;
 import java.util.List;
 
 public class Main {
+    /**
+     * Comment by aron
+     */
     private static final String fileName = "example";
 
     public static void main(String... args){
