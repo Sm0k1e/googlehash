@@ -11,6 +11,7 @@ public class Main {
 
     static Long bonus;
     static List<Ride> rides;
+    static Long globalTime = 0L;
 
 
     public static void main(String... args) {
@@ -24,7 +25,7 @@ public class Main {
         Scanner scanner = new Scanner(iterator.next());
         Simulation simulation = new Simulation(scanner.nextLong(), scanner.nextLong(), scanner.nextLong(), scanner.nextLong(), scanner.nextLong(), scanner.nextLong());
         bonus = simulation.getBonus();
-
+//        globalTime = simulation.getSimulationSteps();
         rides = getRides(iterator);
 
         //////////////////////////////////////////////////////////

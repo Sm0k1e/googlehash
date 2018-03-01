@@ -1,9 +1,6 @@
 package ro.msgjr.hash;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Vehicle {
@@ -12,11 +9,22 @@ public class Vehicle {
     private Long ttLive;
     private List<Long> rideIds;
 
+    public List<Long> getRideHistory() {
+        return rideHistory;
+    }
+
+    public void setRideHistory(List<Long> rideHistory) {
+        this.rideHistory = rideHistory;
+    }
+
+    private List<Long> rideHistory;
+
     public Vehicle(Long id, Long currentRide, Long ttLive) {
         this.id = id;
         this.currentRide = currentRide;
         this.ttLive = ttLive;
         this.rideIds = new ArrayList<>();
+        this.rideHistory = new ArrayList<>();
     }
 
     private List<Long> sortRides(Long time, Point currLoc, List<Ride> rides) {
@@ -38,6 +46,26 @@ public class Vehicle {
         return Math.max(0, ride.getEarliestStart() - time - Main.distance(currLoc, ride.getStartPoint())) + Main.distance(currLoc, ride.getStartPoint()) + result;
 
 
+    }
+
+    private Long costToStart(Ride ride, Point currLoc,Long time ) {
+        return Math.max(0, ride.getEarliestStart() - time - Main.distance(currLoc, ride.getStartPoint())) + Main.distance(currLoc, ride.getStartPoint());
+    }
+
+    private Long scheduleNewRide(){
+        Ride currentRide = Main.rides.stream().filter(e -> e.getId().equals(this.currentRide)).findFirst().get();
+        this.currentRide = this.rideIds.get(0);
+        this.rideHistory.add(this.currentRide);
+        this.ttLive = costToStart(currentRide,currentRide.getEndPoint(),Main.globalTime);
+        return this.currentRide;
+    }
+
+    public Long update() {
+        if(ttLive>0) {
+            ttLive--;
+            return null;
+        }
+     return scheduleNewRide();
     }
 
 
