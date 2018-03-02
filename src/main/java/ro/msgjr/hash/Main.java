@@ -8,10 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class Main {
 
-    private static final String fileName = "a_example";
+    private static final String fileName = "e_high_bonus";
 
     static Long bonus;
     static List<Ride> rides;
@@ -30,7 +31,6 @@ public class Main {
         Scanner scanner = new Scanner(iterator.next());
         Simulation simulation = new Simulation(scanner.nextLong(), scanner.nextLong(), scanner.nextLong(), scanner.nextLong(), scanner.nextLong(), scanner.nextLong());
         bonus = simulation.getBonus();
-//        globalTime = simulation.getSimulationSteps();
         rides = getRides(iterator);
         allRides = new ArrayList<>(rides);
 
@@ -40,13 +40,13 @@ public class Main {
         }
 
         for (int i = 0; i < simulation.getSimulationSteps(); i++) {
-
+            System.out.println(i);
+            globalTime = (long) i;
             for (Vehicle v : vehicles) {
                 Long rideId = v.update();
                 if (rideId != null) {
-                    v.getRideIds().remove(v.getRideIds().stream().filter(e->e.equals(rideId)).findFirst().get());
-                    vehicles.stream().filter(e -> !e.getId().equals(v.getId())).forEach(f -> f.getRideIds().remove(rideId));
-                    rides.remove(rides.stream().filter(e -> e.getId().equals(rideId)).findFirst().get());
+                    vehicles.stream().filter(e -> !e.getId().equals(v.getId())).forEach(f -> f.getRideIds().removeAll(f.getRideIds().stream().filter(e1 -> e1.equals(rideId)).collect(Collectors.toList())));
+                    rides.removeAll(rides.stream().filter(e -> e.getId().equals(rideId)).collect(Collectors.toList()));
                 }
 
                 if (rides.isEmpty()) {

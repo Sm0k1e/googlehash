@@ -1,10 +1,12 @@
 package ro.msgjr.hash;
 
-public class RideCost implements Comparable<RideCost> {
-    Long rideId;
-    Long cost;
+import java.util.Objects;
 
-    public RideCost(Long rideId, Long cost) {
+public class RideCost implements Comparable<RideCost> {
+    private Long rideId;
+    private Long cost;
+
+    RideCost(Long rideId, Long cost) {
         this.rideId = rideId;
         this.cost = cost;
     }
@@ -23,6 +25,21 @@ public class RideCost implements Comparable<RideCost> {
 
     public void setCost(Long cost) {
         this.cost = cost;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RideCost rideCost = (RideCost) o;
+        return Objects.equals(rideId, rideCost.rideId) &&
+                Objects.equals(cost, rideCost.cost);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(rideId);
     }
 
     @Override
