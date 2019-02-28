@@ -1,6 +1,6 @@
-# Google Hash 2018
+# Google Hash 2019
 
-Repository for the 2018 edition of the Google Hash
+Repository for the 2019 edition of the Google Hash
 
 ## Getting Started
 Clone repo ;)
